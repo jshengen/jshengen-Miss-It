@@ -9,7 +9,7 @@ import javafx.scene.layout.Pane;
 public class Obstacles extends ImageView{
 	
 	
-	private double movementMultiplier = .1;
+	private double movementMultiplier = .005;
 	private double ObstacleWidth;
 	private double ObstacleHeight;
 	private Random random;
@@ -18,6 +18,7 @@ public class Obstacles extends ImageView{
 	private double GameHeight;
 	private double ObstacleY;
 	private double ObstacleX;
+	private double maxMoveSpeed;
 	
 	
 	
@@ -30,6 +31,11 @@ public class Obstacles extends ImageView{
 		random = new Random();
 		
 	}
+	
+	public void setMaxMoveSpeed(double maxSpeed) {
+		maxMoveSpeed = maxSpeed;
+	}
+	
 	
 	public void placeObstacle(double Width, double Height) {
 		
@@ -65,10 +71,11 @@ public class Obstacles extends ImageView{
 	
 	public void moveObstacle() {
 		
-		ObstacleY = ObstacleY + movementMultiplier;
+		//ObstacleY = ObstacleY + movementMultiplier;
+		ObstacleY = ObstacleY + maxMoveSpeed;
 		setLayoutY(ObstacleY);
-		movementMultiplier = movementMultiplier + .005;
-		
+		//movementMultiplier = movementMultiplier + .005;
+		maxMoveSpeed = maxMoveSpeed + movementMultiplier;
 		
 		
 	}

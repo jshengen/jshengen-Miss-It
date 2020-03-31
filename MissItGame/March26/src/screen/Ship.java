@@ -23,8 +23,8 @@ public class Ship extends ImageView{
 		this.URL = URL;
 		ShipWidth = width;
 		ShipHeight = height;
-		super.prefHeight(height);
-		super.prefWidth(width);
+		prefHeight(height);
+		prefWidth(width);
 		Rotation = 0;
 		
 	}
@@ -35,31 +35,34 @@ public class Ship extends ImageView{
 	public double getShipWidth() {
 		return ShipWidth;
 	}
+	public void setMoveAmount(double amount) {
+		MoveAmount = amount;
+	}
 	
 	
-	
-	public double startShipX(Pane gamePane) {
-		GameWidth = gamePane.getPrefWidth();
+	public double startShipX(double paneWidth) {
+		GameWidth = paneWidth;
 		double difference = GameWidth - ShipWidth;
-		double xPos = difference /2;
-		ShipX = xPos;
-		return xPos;
+		ShipX = difference /2;
+	
+		return ShipX;
 		
 	}
 	
-	public double startShipY(Pane gamePane) {
+	public double startShipY(double paneHeight) {
 		int pixelsAboveBottom = 5;
-		GameHeight = gamePane.getPrefHeight();
+		GameHeight = paneHeight;
 		double maxY = GameHeight - ShipHeight;
-		double yPos = maxY - pixelsAboveBottom;
-		ShipY = yPos;	
-		return yPos;
+		ShipY = maxY - pixelsAboveBottom;
+		
+		return ShipX;
 		
 	}
 	
 	public void moveLeft() {
-		if (ShipX > 0 ) {
+		if (ShipX >  MoveAmount ) {
 		ShipX = ShipX - MoveAmount;
+	
 		}
 		if (getRotate() > -30) {
 			Rotation = Rotation - RotateAmount;
@@ -67,10 +70,23 @@ public class Ship extends ImageView{
 	}
 	
 	public void moveRight() {
-		if (ShipX + ShipWidth < GameWidth) {
-		ShipX = ShipX + MoveAmount;
+		if(ShipWidth >= MoveAmount) {
 		
+
+			if (ShipX + ShipWidth < GameWidth) {
+				ShipX = ShipX + MoveAmount;
+			
+			}
 		}
+		if(MoveAmount > ShipWidth) {		
+	
+			if (ShipX + MoveAmount + ShipWidth < GameWidth) {
+				ShipX = ShipX + MoveAmount;
+					
+			}
+		}
+		
+		
 		if (getRotate() < 30) {
 			Rotation = Rotation + RotateAmount;
 			
@@ -91,7 +107,7 @@ public class Ship extends ImageView{
 	}
 	
 	public void moveUp() {
-		if (ShipY > 0) {
+		if (ShipY - MoveAmount > 0) {
 			ShipY = ShipY - MoveAmount;
 		}
 		
@@ -99,10 +115,15 @@ public class Ship extends ImageView{
 	
 	
 	public void moveDown() {
-		if (ShipY + ShipHeight + 1 < GameHeight) {
-			ShipY = ShipY + MoveAmount;
+		if (ShipHeight > MoveAmount ) {
+			if (ShipY + ShipHeight + 1 < GameHeight) {
+				ShipY = ShipY + MoveAmount;
+			}
 		}
-		
+		else if (ShipY + MoveAmount + 1 < GameHeight) {
+			ShipY = ShipY + MoveAmount;
+
+		}
 	}
 	
 	public double getShipX() {

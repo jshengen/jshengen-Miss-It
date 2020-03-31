@@ -66,6 +66,12 @@ public class GameScreen {
 	 
 	private boolean FirstTime;
 	
+	private double PlayerMoveSpeed;
+	
+	private double MaxObstacleMoveSpeed;
+	
+	private double ObstacleCreationSpeed;
+	
 	private StartScreen startScreen;
 	
 	private LostScreen lostScreen;
@@ -85,11 +91,13 @@ public class GameScreen {
 	private List<KeyCode> KeysPressed;
 	
 	//Set the default constructor to set up the scene when called
-	public GameScreen(boolean firstRun) {
+	public GameScreen(boolean firstRun, double moveSpeed) {
 		
+		PlayerMoveSpeed = moveSpeed;
 		GamePane = new Pane();
 		GamePane.setPrefSize(WIDTH, HEIGHT);
-		
+		GamePane.setMaxSize(WIDTH, HEIGHT);
+		GamePane.setMinSize(WIDTH, HEIGHT);
 		GameScene = new Scene(GamePane,WIDTH,HEIGHT);
 		GameStage = new Stage();
 		
@@ -159,6 +167,29 @@ public class GameScreen {
 		
 	}
 	
+	public double getPlayerMoveSpeed() {
+		return PlayerMoveSpeed;
+	}
+	
+	public double getMaxObstacleMoveSpeed() {
+		return MaxObstacleMoveSpeed;
+	}
+	public double getObstacleCreationSpeed() {
+		return ObstacleCreationSpeed;
+	}
+	
+	public void setPlayerMoveSpeed(double moveSpeed) {
+		PlayerMoveSpeed = moveSpeed;
+	}
+	
+	public void setObstacleMoveSpeed(double obstacleSpeed) {
+		MaxObstacleMoveSpeed = obstacleSpeed;
+	}
+	public void setObstacleCreationSpeed(double obstacleCreateSpeed) {
+		ObstacleCreationSpeed = obstacleCreateSpeed;
+	}
+	
+	
 	
 	public void setLostScreen(LostScreen loser) {
 		lostScreen = loser;
@@ -167,10 +198,10 @@ public class GameScreen {
 	
 	
 	private void placeShip(String URL, double shipWidth, double shipHeight ) {
-		
 		MainShip = new Ship(URL,shipWidth, shipHeight);
-		MainShipX = MainShip.startShipX( GamePane);
-		MainShipY = MainShip.startShipY( GamePane); 
+		MainShipX = MainShip.startShipX( WIDTH);
+		MainShipY = MainShip.startShipY( HEIGHT); 
+		MainShip.setMoveAmount(PlayerMoveSpeed);
 		
 		MainShip.setLayoutX(MainShipX);
 	
@@ -182,6 +213,7 @@ public class GameScreen {
 	
 	private void placeObstacle() {
 		Obstacles obstacle = new Obstacles(Obstacle1URL,Obstacle1Width,Obstacle1Height);
+		obstacle.setMaxMoveSpeed(MaxObstacleMoveSpeed);
 		obstacle.placeObstacle(WIDTH, HEIGHT);
 		GamePane.getChildren().add(obstacle);
 		ObstacleList.add(obstacle);
@@ -335,8 +367,11 @@ public class GameScreen {
 				
 				k = (int) (k % test);
 				k++;
-				if (test>75) {
-				test = test - .15;
+				if (test>25 && test > ObstacleCreationSpeed) {
+				test = test - ObstacleCreationSpeed;
+				}
+				if (test < 0) {
+					test = 1;
 				}
 			
 				if (IsCollision == true) {

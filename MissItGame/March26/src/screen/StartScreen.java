@@ -45,11 +45,31 @@ public class StartScreen {
 	
 	private boolean FirstTime;
 	
+	private SettingsScene settings;
 	
+	private double SettingsSceneWidth = 300;
 	
+	private double SettingsSceneHeight = 250;
+	
+	private boolean SettingsSceneHidden = true;
+	
+	private double PlayerMoveSpeed;
+	
+	private double MaxObstacleMoveSpeed;
+	
+	private double ObstacleCreationSpeed;
+	
+	private PlayButton settingsButton;
 	
 	
 	public StartScreen() {
+		createSettingsScene();
+		settingsButton = new PlayButton("SETTINGS");
+		
+		//settings.setMovementSpeed();
+		//settings.setObstacleAmount();
+		//settings.setMaxObstacleSpeed();
+		
 		ButtonList = new ArrayList<PlayButton>();
 		LogoList = new ArrayList<ImageView>();
 		fillLogoList();
@@ -62,6 +82,13 @@ public class StartScreen {
 		createButtons();
 		animateLogo();
 		FirstTime = true;
+		
+	}
+	
+	private void createSettingsScene() {
+		settings = new SettingsScene(SettingsSceneWidth, SettingsSceneHeight);
+		settings.setLayoutX(WIDTH - 550); 
+		settings.setLayoutY(350);
 		
 	}
 	
@@ -85,7 +112,7 @@ public class StartScreen {
 	
 	private void createButtons() {
 		createStartButton();
-		createCreditsButton();
+		createSettingsButton();
 		createScoreButton();
 	}
 	
@@ -98,6 +125,16 @@ public class StartScreen {
 		
 	}
 	
+	public double getPlayerMoveSpeed() {
+		return PlayerMoveSpeed;
+	}
+	
+	public double getObstacleMoveSpeed() {
+		return MaxObstacleMoveSpeed;
+	}
+	public double getObstacleCreationSpeed() {
+		return ObstacleCreationSpeed;
+	}
 	
 	private void createStartButton() {
 		PlayButton startButton = new PlayButton("PLAY");
@@ -106,18 +143,36 @@ public class StartScreen {
 			@Override
 			public void handle(MouseEvent event) {
 				if(FirstTime == true) {
-				GameScreen gameScreen = new GameScreen(true);
+				MaxObstacleMoveSpeed = settings.getObstacleSpeed();
+				ObstacleCreationSpeed = settings.getObstacleCreationSpeed();
+				PlayerMoveSpeed = settings.getMovementSpeed();
+				GameScreen gameScreen = new GameScreen(true, PlayerMoveSpeed);
+				
 				GameScreen = gameScreen;
-				gameScreen.startNewGame(MainStage);
+			
 				//LogoTime.stop();
 				FirstTime = false;
+				
 				gameScreen.setStart(startScreen);
 				gameScreen.setGameScreen(gameScreen);
+				gameScreen.setObstacleCreationSpeed(ObstacleCreationSpeed);
+				gameScreen.setObstacleMoveSpeed(MaxObstacleMoveSpeed);
+
+				
+			
+				gameScreen.startNewGame(MainStage);
 				}
 				else if(FirstTime == false) {
-					GameScreen gameScreen = new GameScreen(false);
+					MaxObstacleMoveSpeed = settings.getObstacleSpeed();
+					ObstacleCreationSpeed = settings.getObstacleCreationSpeed();
+					PlayerMoveSpeed = settings.getMovementSpeed();
+					GameScreen gameScreen = new GameScreen(false, PlayerMoveSpeed);
 					GameScreen = gameScreen;
 					gameScreen.startNewGame(MainStage, lostScreen);
+					
+					gameScreen.setObstacleCreationSpeed(ObstacleCreationSpeed);
+					gameScreen.setObstacleMoveSpeed(MaxObstacleMoveSpeed);
+					gameScreen.setPlayerMoveSpeed(PlayerMoveSpeed);
 					//LogoTime.stop();
 				}
 				
@@ -129,9 +184,28 @@ public class StartScreen {
 	
 	}
 	
-	private void createCreditsButton() {
-		PlayButton creditsButton = new PlayButton("CREDITS");
-		addMenuButton(creditsButton);
+	private void createSettingsButton() {
+		
+		addMenuButton(settingsButton);
+		
+		settingsButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
+
+			@Override
+			public void handle(MouseEvent event) {
+				if(SettingsSceneHidden == true) {
+					MainPane.getChildren().add(settings);
+					SettingsSceneHidden = false;
+				}
+				else if(SettingsSceneHidden == false) {
+					MainPane.getChildren().remove(settings);
+					SettingsSceneHidden = true;
+					
+				}
+			}
+			
+		});
+		
+		
 		
 	}
 	
