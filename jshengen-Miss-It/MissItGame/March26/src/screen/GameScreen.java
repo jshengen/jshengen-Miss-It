@@ -122,7 +122,7 @@ public class GameScreen {
 		setUpScore();
 		createListeners();
 	
-		placeObstacle();
+		//placeObstacle();
 		
 		
 		
